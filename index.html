@@ -280,11 +280,8 @@
             }
 
             //***Set X or Check on letter.
-            //$('#'+id).hide();
-            //$('#divMarked' + id).addClass(existClass);
-            //$('#divMarked' + id).innerHTML = existChar;
-            document.getElementById("divMarked" + id).className = existClass;
-            document.getElementById("divMarked" + id).innerHTML = existChar;
+            $('#divMarked' + id).addClass(existClass);
+            $('#divMarked' + id).html(existChar);
 
             //***SETS GAMEOVER VAR!!!
             scoreUpdate();
@@ -408,36 +405,28 @@
                 //var letter3 = lettersUsed.indexOf(letter2.toString());
                 //console.log("Index of Used: " + letter3);
 
-                //if (lettersUsed.indexOf(lettersCapital.indexOf(words[selectedWord].substring(i, i + 1).toUpperCase()).toString()) === -1) // checked in letterSelect()
                 letterSelect(lettersCapital.indexOf(words[selectedWord].substring(i, i + 1).toUpperCase()).toString());
             }
-            
-            //***Grey "Solve Button" and disable.
-            //$('#btnSolve').attr('disabled', 'disabled');
-            
-            //***Show final dead hanging man.
-            document.getElementById("divHangman").innerHTML = "<img src=\"images/hangman0" + maxWrong + ".gif\" height=\"12%\" width=\"12%\" />";
         });
 
         function dialogBox(tl, msg) {
 
-            //$('#dialog-message').innerHTML = msg;
-            document.getElementById("dialog-message").innerHTML = msg;
-            
-            $("#dialog-message").dialog({
-                title: tl,
-                draggable: false,
-                modal: true,
-                width: 400,
-                buttons: {
-                    Close: function () {
-                        $(this).dialog("close");
+            window.setTimeout(function(){ 
+                $("#dialog-message").html(msg).dialog({
+                    title: tl,
+                    draggable: false,
+                    modal: true,
+                    width: 400,
+                    buttons: {
+                        Close: function () {
+                            $(this).dialog("close");
+                        }
                     }
-                }
-            });
+                });
+            }, 1200);
         }
 
-        dialogBox("Welcome", "Thanks for playing<br><br>Click the letters to guess the secret word. You only have " + maxWrong + " chances.");
+        dialogBox("Welcome", "Thanks for playing<br><br>Click the letters to guess the secret word. You only have " + maxWrong + " chances.");   
         gameInit();
     </script>
 </body>
