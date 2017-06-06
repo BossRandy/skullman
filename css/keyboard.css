@@ -1,0 +1,58 @@
+
+@import url('keys.css');
+
+/***
+Keyboard buttons
+    <link href="css/keys.css" rel="stylesheet" type="text/css">
+***/
+.CapitalLetters {
+    text-align: center;
+    width: 522px; /*58 x buttons*/
+    margin: 0 auto;
+    position: relative;
+    top: -40px;
+}
+
+.answer {
+    display: inline-block;
+}
+
+.light {
+    font-family: 'Cabin Sketch', cursive;
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 5px;
+    z-index: 0;
+}
+
+.correct {
+    font-family: 'Baloo', cursive;
+    font-weight: bold;
+    font-size: 56px;
+    color: rgba(9, 159, 24, 0.5);
+    -webkit-transform: scale(-1, 1) rotate(-35deg);
+    -moz-transform: scale(-1, 1) rotate(-35deg);
+    -ms-transform: scale(-1, 1) rotate(-35deg);
+    -o-transform: scale(-1, 1) rotate(-35deg);
+    transform: scale(-1, 1) rotate(-35deg);
+    position: relative;
+    top: -4px;
+    left: 64px;
+    z-index: 1;
+    height: 0;
+    width: 0;
+}
+
+.wrong {
+    font-family: 'Baloo', cursive;
+    font-weight: bold;
+    font-size: 56px;
+    color: rgba(159, 9, 11, 0.5);
+    position: relative;
+    top: -16px;
+    left: 12px;
+    z-index: 1;
+    height: 0;
+    width: 0;
+}

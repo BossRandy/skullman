@@ -1,0 +1,28 @@
+/***
+Hanging Man
+***/
+.hangman {
+    text-align: center;
+    -webkit-transition: opacity 0.5s;
+    -moz-transition: opacity 0.5s;
+    -ms-transition: opacity 0.5s;
+    -o-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+
+.scoreboard {
+    background-color: rgba(239, 239, 239, 0.3);
+    box-shadow: 5px 5px 5px rgba(214, 214, 214, 0.5);
+    border: 5px groove;
+    border-radius: 10px;
+    height: 135px;
+    width: 215px;
+    position: absolute;
+    top: 25px;
+    left: 800px;
+    z-index: 1;
+    padding: 5px;
+    font-family: 'Baloo', cursive;
+    font-size: 21px;
+    color: rgba(159, 9, 11, 0.8);
+}

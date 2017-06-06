@@ -1,0 +1,25 @@
+/***
+New Game and Solve Button
+***/
+.buttons {
+    text-align: center;
+    position: relative;
+    top: -40px;
+}
+
+.button {
+    border-radius: 10px;
+    height: 40px;
+    width: 120px;
+    background: rgba(0, 172, 230,1);
+    background: linear-gradient(bottom, rgba(0, 172, 230,1), rgba(0,77,102,.75));
+    background: linear-gradient(top, rgba(0,77,102,1), rgba(0, 172, 230,.75));
+    background: -webkit-linear-gradient(bottom, rgba(0, 172, 230,1), rgba(0,77,102,.75));
+    background: -webkit-linear-gradient(top, rgba(0,77,102,1), rgba(0, 172, 230,.75));
+    background: -moz-linear-gradient(bottom, rgba(0, 172, 230,1), rgba(0,77,102,.75));
+    background: -moz-linear-gradient(top, rgba(0,77,102,1), rgba(0, 172, 230,.75));
+    font-family: 'Cabin Sketch', cursive;
+    font-weight: bold;
+    text-align: center;
+    font-size: 14px;
+}

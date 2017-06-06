@@ -1,0 +1,23 @@
+/***
+Tombstones and letters
+***/
+.buckets {
+    text-align: center;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    position: relative;
+    top: -25px;
+}
+
+.tombchar {
+    display: inline-block;
+    background-image: url("../images/tombstone04_s.png");
+    height: 90px;
+    width: 71px;
+    margin-left: 10px;
+    font-family: 'Baloo', cursive;
+    font-weight: bold;
+    font-size: 56px;
+    color: rgba(159, 9, 11, 0.8);
+}
