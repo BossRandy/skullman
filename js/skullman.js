@@ -6,10 +6,40 @@ var maxWrong = 6;           //***Max allowed wrong guesses.
 var gameOver = false;       //***Set when win or loose.
 var gameWin = false;        //***Set only when win guess correct.
 var gameSolve = false;      //***Set when solve button used.
+var api = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&minCorpusCount=8000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1&minLength=4&maxLength=8&api_key=[API_KEY]';
+
 
 //*****************
 // FUNCTIONS
 //*****************
+
+function getNewWord() {
+    
+    selectedWord = Math.floor(Math.random() * (words.length - 1));
+
+    $.when($.get(api)).then(function(data) {
+
+        //***Random word from API put in index 0.
+        selectedWord = 0;
+        words[selectedWord] = data.word;
+        
+        getNewWordTomb();
+
+    }, getNewWordTomb);
+}
+
+function getNewWordTomb() {
+
+    console.log("gameNew:selectedWord:value:" + selectedWord + " (" + words[selectedWord] + ")");
+
+    //***Place tombstone for each char in selected word.
+    document.getElementById("divBuckets").innerHTML = "";
+    for (let i = 0; i < words[selectedWord].length; i++) {
+        document.getElementById("divBuckets").innerHTML += '<div id="divTombChar' + i + '" class="tombchar">_</div>'; //***STRANGE SHIFTING WITHOUT DASH CHAR AS DEFAULT
+    }
+
+    scoreUpdate();
+}
 
 function dialogBox(tl, msg) {
 
@@ -191,6 +221,8 @@ function gameNew() {
     });
 
     //***Pick random word.
+    getNewWord();
+    /*
     selectedWord = Math.floor(Math.random() * (words.length - 1));
     console.log("gameNew:selectedWord:value:" + selectedWord + " (" + words[selectedWord] + ")");
 
@@ -200,11 +232,13 @@ function gameNew() {
         document.getElementById("divBuckets").innerHTML += '<div id="divTombChar' + i + '" class="tombchar">_</div>'; //***STRANGE SHIFTING WITHOUT DASH CHAR AS DEFAULT
     }
 
+    scoreUpdate();
+    */
+
     //***Disable/enable buttons.
     $('#btnSolve').removeAttr('disabled');
     $('#btnRestart').attr('disabled', 'disabled');
 
-    scoreUpdate();
 }
 
 //*****************
