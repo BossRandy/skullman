@@ -6,7 +6,7 @@ var maxWrong = 6;           //***Max allowed wrong guesses.
 var gameOver = false;       //***Set when win or loose.
 var gameWin = false;        //***Set only when win guess correct.
 var gameSolve = false;      //***Set when solve button used.
-var api = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&minCorpusCount=8000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1&minLength=4&maxLength=8&api_key=[API_KEY]';
+var api = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&minCorpusCount=8000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1';
 
 
 //*****************
@@ -17,7 +17,11 @@ function getNewWord() {
     
     selectedWord = Math.floor(Math.random() * (words.length - 1));
 
-    $.when($.get(api)).then(function(data) {
+    var apitemp = api += '&api_key=[API_KEY]';
+    apitemp = apitemp += '&minLength=4';
+    apitemp = apitemp += '&maxLength=8';
+
+    $.when($.get(apitemp)).then(function(data) {
 
         //***Random word from API put in index 0.
         selectedWord = 0;
