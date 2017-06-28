@@ -6,8 +6,27 @@ var maxWrong = 6;           //***Max allowed wrong guesses.
 var gameOver = false;       //***Set when win or loose.
 var gameWin = false;        //***Set only when win guess correct.
 var gameSolve = false;      //***Set when solve button used.
+var gameWinCnt = 0;
+var playerInitials = '';
+var playerScoreKey = '';
 var api = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=true&includePartOfSpeech=noun&minCorpusCount=8000&maxCorpusCount=-1&minDictionaryCount=3&maxDictionaryCount=-1';
 
+$(document).ready(function () {
+
+    // Initialize Firebase
+    var config = {
+        apiKey: "{API_KEY}",
+        authDomain: "skullman-23b0b.firebaseapp.com",
+        databaseURL: "https://skullman-23b0b.firebaseio.com",
+        projectId: "skullman-23b0b",
+        storageBucket: "",
+        messagingSenderId: "679268731610"
+    };
+
+    firebase.initializeApp(config);
+
+    $("#divSubmitScore").hide();
+});
 
 //*****************
 // FUNCTIONS
@@ -43,9 +62,10 @@ function getNewWordTomb() {
     }
 
     scoreUpdate();
+    highUpdate();
 }
 
-function dialogBox(tl, msg) {
+function dialogBox(tl, msg, score) {
 
     window.setTimeout(function () {
         $("#divDialog").html(msg).dialog({
@@ -56,10 +76,36 @@ function dialogBox(tl, msg) {
             buttons: {
                 Close: function () {
                     $(this).dialog("close");
+
+                    if (score === true) {
+                        if (playerInitials.length === 0)
+                            dialogScore();
+                        else
+                            submitScore();
+                    }
                 }
             }
         });
     }, 1200);
+}
+
+function dialogScore() {
+
+    $("#divSubmitScore").dialog({
+        autoOpen: false,
+        height: 235,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Submit Score": submitScore,
+        },
+        close: function () {
+            $("#divSubmitScore").find("form")[0].reset();
+            $('#putInital').removeClass("ui-state-error");
+        }
+    }).dialog("open");
+
+
 }
 
 function uniqueChar(str1) {
@@ -110,17 +156,73 @@ function GuessCnt(correct) {
 
 function scoreUpdate() {
 
-    //***Scorebaord.
-    var scoretext = "";
-    scoretext += "Word Length: " + words[selectedWord].length.toString() + "<br />";
-    scoretext += "Guesses: " + lettersUsed.length.toString() + "<br />";
-    scoretext += "Correct: " + GuessCnt(true).toString() + "<br />"; //***SETS GAMEOVER VAR!!!
-    scoretext += "Wrong: " + GuessCnt(false).toString() + " of " + maxWrong.toString() + "<br />"; //***SETS GAMEOVER VAR!!!
+    //***Scorebaord text.
+    var temp = "";
+    temp += "Word Length: " + words[selectedWord].length.toString() + "<br />";
+    temp += "Guesses: " + lettersUsed.length.toString() + "<br />";
+    temp += "Correct: " + GuessCnt(true).toString() + "<br />"; //***SETS GAMEOVER VAR!!!
+    temp += "Wrong: " + GuessCnt(false).toString() + " of " + maxWrong.toString() + "<br />"; //***SETS GAMEOVER VAR!!!
 
-    //document.getElementById("divScoreboard").innerHTML = scoretext;
-    $('#divScoreboard').html(scoretext);
+    //***Update scoreboard DIV.
+    $('#divScoreboard').html(temp);
 }
 
+function highUpdate() {
+
+    var db = firebase.database();
+
+    db.ref('score').on('value', function (results) {
+        //console.log(results);
+
+        //***Hold the score IDs from database.
+        var scoreIDs = [];
+        var topScore = results.val();
+        for (var s in topScore) {
+            //console.log(s);
+            //console.log(topScore[s].initials);
+            //console.log(topScore[s].gameswon);
+
+            scoreIDs.push(s);
+        }
+
+        //***Clear the high score table and loop 10 times. (only show 10 top scores).
+        $('#tableHighscore').html('');
+        for (let i = 1; i <= 10; i++) {
+
+            //***Default inital and score are dash. If loop # is less that scoresIDs then use database data.
+            var theInital = '---';
+            var theScore = '--';
+            if (i <= scoreIDs.length) {
+                theInital = topScore[scoreIDs[i - 1]].initials;
+                theScore = topScore[scoreIDs[i - 1]].gameswon;
+            }
+
+            //***New table row.
+            var $newTR = $('<tr>');
+
+            //***Rank column.
+            var $newTD = $('<td>').attr('width', '6px');
+            $newTD.html('#' + i.toString());
+            $newTR.append($newTD);
+
+            //***Player inital column.
+            var $newTD = $('<td>').attr('width', '75px');
+            $newTD.html(theInital);
+            $newTR.append($newTD);
+
+            //***Player score column.
+            var $newTD = $('<td>').attr('text-align', 'right');
+            $newTD.html(theScore);
+            $newTR.append($newTD);
+
+            //***Append table row to table.
+            $('#tableHighscore').append($newTR);
+        }
+
+    });
+}
+
+//***Code to run when a letter is selected. Used during solve puzzle too.
 function letterSelect(id) {
     console.log("letterSelect():value:" + id);
 
@@ -162,10 +264,15 @@ function letterSelect(id) {
         $('#btnSolve').attr('disabled', 'disabled');
         $('#btnRestart').removeAttr('disabled');
 
-        if (gameWin === true && gameSolve === false)
-            dialogBox("You Won!", "That was some great guessing, but I think you just got lucky.<br><br>Click 'New Game' button to play again.");
-        else
+        if (gameWin === true && gameSolve === false) {
+            gameWinCnt++;
+            dialogBox("You Won!", "That was some great guessing, but I think you just got lucky.<br><br>Click 'New Game' button to play again.", true);
+        }
+        else {
+            gameWinCnt = 0;
+            playerScoreKey = '';
             dialogBox("You Lost!", "The secret word was \"" + words[selectedWord].toUpperCase() + "\".<br><br>Click 'New Game' button to play again.");
+        }
     }
 }
 
@@ -189,7 +296,7 @@ function gameInit() {
     words.push("automobile");
     words.push("vacation");
     words.push("poptart");
-    words.push("chololate");
+    words.push("chocolate");
     words.push("rockstar");
     words.push("bandaid");
     words.push("javascript");
@@ -226,18 +333,6 @@ function gameNew() {
 
     //***Pick random word.
     getNewWord();
-    /*
-    selectedWord = Math.floor(Math.random() * (words.length - 1));
-    console.log("gameNew:selectedWord:value:" + selectedWord + " (" + words[selectedWord] + ")");
-
-    //***Place tombstone for each char in selected word.
-    document.getElementById("divBuckets").innerHTML = "";
-    for (let i = 0; i < words[selectedWord].length; i++) {
-        document.getElementById("divBuckets").innerHTML += '<div id="divTombChar' + i + '" class="tombchar">_</div>'; //***STRANGE SHIFTING WITHOUT DASH CHAR AS DEFAULT
-    }
-
-    scoreUpdate();
-    */
 
     //***Disable/enable buttons.
     $('#btnSolve').removeAttr('disabled');
@@ -245,9 +340,79 @@ function gameNew() {
 
 }
 
+function submitScore() {
+
+    if (playerInitials.length === 0)
+        playerInitials = $('#putInital').val()
+
+    if (checkLength(playerInitials, "Initials", 1, 3) === false) {
+        playerInitials = '';
+        $('#putInital').addClass("ui-state-error");
+        return;
+    }
+        
+    playerInitials = playerInitials.substring(0, 3).toUpperCase();
+
+    //*********
+    // Setup database update of score
+    //*********
+
+    //***Databbase reference.
+    var db = firebase.database();
+
+    if (playerScoreKey.length === 0)
+        playerScoreKey = db.ref().child('score').push().key;
+
+    //***Data to post.
+    var postData = {
+        initials: playerInitials,
+        gameswon: gameWinCnt.toString()
+    };
+
+    var updates = {};
+    updates['/score/' + playerScoreKey] = postData;
+    db.ref().update(updates);
+
+    //***Close the initals dialog.
+    $("#divSubmitScore").dialog("close");
+}
+
+function padding(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+function checkLength(o, n, min, max) {
+
+    var result = false;
+
+    if (o.length > max || o.length < min)
+        scoreError("Length of " + n + " must be between " + min + " and " + max + ".");
+    else
+        result = true;
+
+    return result;
+}
+
+function scoreError(err) {
+    $(".validateTips").text(err).addClass("ui-state-highlight");
+
+    setTimeout(function () {
+        $(".validateTips").removeClass("ui-state-highlight", 1500);
+    }, 500);
+}
+
 //*****************
 // EVENTS
 //*****************
+
+$("#divSubmitScore").find("form").on("submit", function (event) {
+    event.preventDefault();
+
+    submitScore();
+});
+
 $(document).on('click', '.light', function () {
     var id = $(this).attr('id'); //this.id;
     console.log(".light:click:value:" + id);
@@ -289,8 +454,6 @@ $('#btnSolve').click(function () {
     }
 
 });
-
-
 
 dialogBox("Welcome", "Thanks for playing.<br><br>Click the letters to guess the secret word. You only have " + maxWrong + " chances.");
 gameInit();

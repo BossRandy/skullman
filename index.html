@@ -10,6 +10,8 @@
     <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
     <link href="jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
 
+    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+
     <link href="https://fonts.googleapis.com/css?family=Cabin+Sketch" rel="stylesheet" type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Baloo" rel="stylesheet" type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type='text/css'>
@@ -25,9 +27,26 @@
 <body>
     <div id="divDialog" title=""></div>
 
+    <div id="divSubmitScore" title="Submit Score">
+        <p class="validateTips">All form fields are required.</p>
+
+        <form>
+            <fieldset>
+                <label for="Inital">Enter Initals: </label>
+                <input type="text" name="Inital" id="putInital" value="" class="text ui-widget-content ui-corner-all">
+
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+
     <div>
         <div id="divHangman" class="hangman"></div>
-        <div id="divScoreboard" class="scoreboard"></div>
+        <div id="divScoreboard" class="score scoreboard"></div>
+        <div id="divHighscore" class="score highscore">Top 10 Games Won:
+            <table id="tableHighscore" style="width:100%;"></table>
+        </div>
     </div>
 
     <div id="divBuckets" class="buckets"></div>
@@ -40,7 +59,7 @@
     <div id="divButtons" class="buttons">
         <button id="btnRestart" class="button">New Game</button>
         <button id="btnSolve" class="button">Solve Puzzle</button>
-        <label id="lblVersion" class="version">v0.90</label>
+        <label id="lblVersion" class="version">v0.91</label>
     </div>
 
     <script src="js/skullman.js"></script>
