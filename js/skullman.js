@@ -13,12 +13,14 @@ var api = 'http://api.wordnik.com:80/v4/words.json/randomWord?hasDictionaryDef=t
 
 $(document).ready(function () {
 
+    $("#divSubmitScore").hide();
+
     // Initialize Firebase
 
 
-    firebase.initializeApp(config);
+    //firebase.initializeApp(config);
 
-    $("#divSubmitScore").hide();
+    
 });
 
 //*****************
