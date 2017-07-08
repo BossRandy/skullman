@@ -18,9 +18,6 @@ $(document).ready(function () {
     // Initialize Firebase
 
 
-    //firebase.initializeApp(config);
-
-    
 });
 
 //*****************
@@ -28,27 +25,32 @@ $(document).ready(function () {
 //*****************
 
 function getNewWord() {
-    
+
+    //***Select a random preset word by default.
     selectedWord = Math.floor(Math.random() * (words.length - 1));
 
-    var apitemp = api += '&api_key=[API_KEY]';
+    //***Word API settings.
+    var apitemp = api += '&api_key=c18a8a35d584402bef9000d09c50d274e2bdf7f22eff6c324';
     apitemp = apitemp += '&minLength=4';
     apitemp = apitemp += '&maxLength=8';
 
+    //***Tray and get random word from API.
     $.when($.get(apitemp)).then(function(data) {
 
-        //***Random word from API put in index 0.
+        //***Always put random word from API put in index 0.
         selectedWord = 0;
         words[selectedWord] = data.word;
-        
+
+        //***Build up number of tombstones.
         getNewWordTomb();
 
+        //***An API failure will just build tombstones for the intial random word selected - pretty sweet code right here.
     }, getNewWordTomb);
 }
 
 function getNewWordTomb() {
 
-    console.log("gameNew:selectedWord:value:" + selectedWord + " (" + words[selectedWord] + ")");
+    console.log("gameNew:selectedWord:value:" + selectedWord + " (" + words[selectedWord] + ")"); //***Debug logging.
 
     //***Place tombstone for each char in selected word.
     document.getElementById("divBuckets").innerHTML = "";
@@ -100,7 +102,6 @@ function dialogScore() {
         }
     }).dialog("open");
 
-
 }
 
 function uniqueChar(str1) {
@@ -116,7 +117,7 @@ function uniqueChar(str1) {
 }
 
 function GuessCnt(correct) {
-    console.log("GuessCnt():value:" + correct);
+    console.log("GuessCnt():value:" + correct); //***Debug logging.
     var result = 0;
 
     //***Loop index of guesses which holds the index of lettersCapital. Count correct or incorrct guesses.
@@ -219,7 +220,7 @@ function highUpdate() {
 
 //***Code to run when a letter is selected. Used during solve puzzle too.
 function letterSelect(id) {
-    console.log("letterSelect():value:" + id);
+    console.log("letterSelect():value:" + id); //***Debug logging.
 
     //***Do nothing if already used.
     if (lettersUsed.indexOf(id) !== -1)
@@ -273,7 +274,7 @@ function letterSelect(id) {
 
 //***Initilize variables for new game.
 function gameInit() {
-    console.log("gameInit()");
+    console.log("gameInit()"); //***Debug logging.
 
     //***Loop ascii for capital A-Z.
     for (let i = 65; i <= 90; i++) {
@@ -313,7 +314,7 @@ function gameInit() {
 
 //***Draw fresh UI.
 function gameNew() {
-    console.log("gameNew()");
+    console.log("gameNew()"); //***Debug logging.
     lettersUsed = new Array;
     gameOver = false;
     gameWin = false;
@@ -372,17 +373,20 @@ function submitScore() {
     $("#divSubmitScore").dialog("close");
 }
 
+//***Used to pad a string. usage padding(<string to pad>, <total_string_size>, <pad with string - default 0>)
 function padding(n, width, z) {
     z = z || '0';
     n = n + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
+//***Return True if string within min/max
 function checkLength(o, n, min, max) {
 
     var result = false;
 
     if (o.length > max || o.length < min)
+        //***Show error.
         scoreError("Length of " + n + " must be between " + min + " and " + max + ".");
     else
         result = true;
@@ -402,12 +406,14 @@ function scoreError(err) {
 // EVENTS
 //*****************
 
+//***Model form submit to firebase.
 $("#divSubmitScore").find("form").on("submit", function (event) {
     event.preventDefault();
 
     submitScore();
 });
 
+//***Keys clicked event.
 $(document).on('click', '.light', function () {
     var id = $(this).attr('id'); //this.id;
     console.log(".light:click:value:" + id);
@@ -417,8 +423,9 @@ $(document).on('click', '.light', function () {
     letterSelect(id);
 });
 
+//***Build a new game.
 $('#btnRestart').click(function () {
-    console.log("btnRestart");
+    console.log("btnRestart"); //***Debug logging.
 
     //***Clear X's and Checks.
     //***Reset hangman graphic.
@@ -428,27 +435,23 @@ $('#btnRestart').click(function () {
     gameNew();
 });
 
+//***Solve current game.
 $('#btnSolve').click(function () {
-    console.log("btnSolve");
+    console.log("btnSolve"); //***Debug logging.
 
     gameSolve = true;
 
     //***Loop though selected word and add selected char to guesses if not already guessed.
-    //console.log(lettersUsed);
     for (let i = 0; i < words[selectedWord].length; i++) {
-        //var letter1 = words[selectedWord].substring(i, i + 1).toUpperCase();
-        //console.log("Selected Word Letter: " + letter1);
 
-        //var letter2 = lettersCapital.indexOf(letter1);
-        //console.log("Index of Letter: " + letter2);
-
-        //var letter3 = lettersUsed.indexOf(letter2.toString());
-        //console.log("Index of Used: " + letter3);
-
+        //***Basically act like clicking all the correct letters in selected hiddem word - Little hard to read.
         letterSelect(lettersCapital.indexOf(words[selectedWord].substring(i, i + 1).toUpperCase()).toString());
     }
 
 });
 
+//***Show inital welcome box.
 dialogBox("Welcome", "Thanks for playing.<br><br>Click the letters to guess the secret word. You only have " + maxWrong + " chances.");
+
+//***START HERE!!!
 gameInit();

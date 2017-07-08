@@ -5,17 +5,22 @@
     <meta charset="utf-8" />
     <title>Skullman</title>
 
+    <!--JQUERY-->
     <script src="jquery-3.2.1.js"></script>
 
+    <!--JQUERY UI-->
     <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
     <link href="jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
 
+    <!--FIREBASE-->
     <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
 
+    <!--FONT LINKS-->
     <link href="https://fonts.googleapis.com/css?family=Cabin+Sketch" rel="stylesheet" type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Baloo" rel="stylesheet" type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type='text/css'>
     
+    <!--CSS LINKS-->
     <link href="css/global.css" rel="stylesheet" type="text/css">
     <link href="css/button.css" rel="stylesheet" type="text/css">
     <link href="css/keyboard.css" rel="stylesheet" type="text/css">
@@ -25,8 +30,14 @@
     <style></style>
 </head>
 <body>
+    <!--*************
+    POPUP DIALOG BOX
+    **************-->
     <div id="divDialog" title=""></div>
 
+    <!--*************
+    SUBMIT HIGHSCORE MODEL FORM
+    **************-->
     <div id="divSubmitScore" title="Submit Score">
         <p class="validateTips">All form fields are required.</p>
 
@@ -41,6 +52,9 @@
         </form>
     </div>
 
+    <!--*************
+    TOP - HANGMAN - SCOREBOARD - HIGHSCORE
+    **************-->
     <div>
         <div id="divHangman" class="hangman"></div>
         <div id="divScoreboard" class="score scoreboard"></div>
@@ -49,13 +63,22 @@
         </div>
     </div>
 
+    <!--*************
+    TOMBSTONES
+    **************-->
     <div id="divBuckets" class="buckets"></div>
     <br />
 
+    <!--*************
+    KEYBOARD/LETTERS
+    **************-->
     <div id="divCapitalLetters" class="CapitalLetters"></div>
     <br />
     <br />
 
+    <!--*************
+    NEW GAME / SOLVE BUTTONS
+    **************-->
     <div id="divButtons" class="buttons">
         <button id="btnRestart" class="button">New Game</button>
         <button id="btnSolve" class="button">Solve Puzzle</button>
